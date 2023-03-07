@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <link rel="shortcut icon" href="#"/>
+    <title>招財貓卡片產生器</title>
+		<!-- fontAwesome CDN 5.11.2 -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.css" rel="stylesheet">
+		<style>
+			@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+			*{font-family:'Noto Sans TC','微軟正黑體';}
+			*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+			.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+			hr{margin:20px 0px;}
+			pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+			pre strong{color:#CC0000;}
+			pre em{font-style:normal; font-weight:bold; color:#006600;}
+			button{border:none; font-size: 16px; padding: 10px; background-color:#dd802c; color: #ffff; cursor: pointer; border-radius: 10px;}
+
+			ul, ol{ list-style:none; }
+			body{background-color: #FFFBE9;}/*背景色*/
+			.wrapper{ border:0px solid #333; }
+
+			/*應用程式*/
+			.genCard{ width:100%; max-width:600px; margin:0 auto; border:0px solid red; }
+			
+			/*gallery 作圖區=======================*/
+			.gallery{ margin: 0 auto; max-width: 500px; width:100%; position:relative; margin-bottom: 20px; border:0px solid olive; }
+
+			/*.gallery 等比*/
+			.gallery::after{ content:""; display:block; width:80%; padding-bottom:100%;}
+
+			/*零件*/
+			.gallery img[class*=pic_]{  display:block; width:100%; height:100%; object-fit:cover; position:absolute; pointer-events: none;}
+
+			/*零件的圖層*/
+			.gallery img.pic_breed{ z-index:20;}/*品種*/
+			.gallery img.pic_necklace{z-index:30;}/*項鍊*/
+			.gallery img.pic_deco{z-index:60;}/*配件*/
+			.gallery img.pic_face{z-index:50;}/*臉*/
+			
+			/*換物件==================*/
+			.tab_1{ border:0px solid green; }
+			/*第一層*/
+			.tab_1 ul{ display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start; margin-bottom:20px; border:0px solid green; }
+			.tab_1 ul li{ width:calc( (100% - (2% * 4)) / 5); position:relative; background:url(images/tab_1_0.png); background-size:100% auto; }
+			.tab_1 ul li::after{ content:""; display:block; width:100%; padding-bottom:100%; }
+
+			.tab_1 ul li.active{ background-color:pink; }
+			.tab_1 ul li:hover{ opacity:0.7;}
+
+			.tab_1 ul li:nth-of-type(1){background-image:url(images/tab_1_0.png);}
+			.tab_1 ul li:nth-of-type(2){background-image:url(images/tab_1_1.png);}
+			.tab_1 ul li:nth-of-type(3){background-image:url(images/tab_1_2.png);}
+			.tab_1 ul li:nth-of-type(4){background-image:url(images/tab_1_3.png);}
+			.tab_1 ul li:nth-of-type(5){background-image:url(images/tab_1_4.png);}
+
+
+			/*第二層*/
+			.tab_1 ol{ display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start; margin-bottom:20px;border:0px solid green;}
+			.tab_1 ol li{ width:calc( (100% - (8% * 4)) / 5); position:relative; background:url(images/tab_1_0.png); background-size:100% auto; border:0px solid blue; }
+			.tab_1 ol li::after{ content:""; display:block; width:100%; padding-bottom:100%;}
+			/*選取當下*/	
+			.tab_1 ol li.active{ opacity:.5;}
+			.tab_1 ol li:hover{ opacity:.5;}
+
+			/*品種*/
+			.tab_1 ol.breed li:nth-of-type(1){background-image:url(images/breed_0.png);}
+			.tab_1 ol.breed li:nth-of-type(2){background-image:url(images/breed_1.png);}
+			.tab_1 ol.breed li:nth-of-type(3){background-image:url(images/breed_2.png);}
+			.tab_1 ol.breed li:nth-of-type(4){background-image:url(images/breed_3.png);}
+			.tab_1 ol.breed li:nth-of-type(5){background-image:url(images/breed_4.png);}
+			.tab_1 ol.breed li:nth-of-type(6){background-image:url(images/breed_5.png);}
+			
+			/*項鍊*/
+			.tab_1 ol.necklace li:nth-of-type(1){background-image:url(images/necklace_del.png);}
+			.tab_1 ol.necklace li:nth-of-type(2){background-image:url(images/necklace_0.png);}
+			.tab_1 ol.necklace li:nth-of-type(3){background-image:url(images/necklace_1.png);}
+			.tab_1 ol.necklace li:nth-of-type(4){background-image:url(images/necklace_2.png);}
+			.tab_1 ol.necklace li:nth-of-type(5){background-image:url(images/necklace_3.png);}
+			.tab_1 ol.necklace li:nth-of-type(6){background-image:url(images/necklace_4.png);}
+
+			/*裝飾*/
+			.tab_1 ol.deco li:nth-of-type(1){background-image:url(images/deco_del.png);}
+			.tab_1 ol.deco li:nth-of-type(2){background-image:url(images/deco_0.png);}
+			.tab_1 ol.deco li:nth-of-type(3){background-image:url(images/deco_1.png);}
+			.tab_1 ol.deco li:nth-of-type(4){background-image:url(images/deco_2.png);}
+			.tab_1 ol.deco li:nth-of-type(5){background-image:url(images/deco_3.png);}
+			.tab_1 ol.deco li:nth-of-type(6){background-image:url(images/deco_4.png);}
+
+			/*臉*/
+			.tab_1 ol.face li:nth-of-type(1){background-image:url(images/face_del.png);}
+			.tab_1 ol.face li:nth-of-type(2){background-image:url(images/face_0.png);}
+			.tab_1 ol.face li:nth-of-type(3){background-image:url(images/face_1.png);}
+			.tab_1 ol.face li:nth-of-type(4){background-image:url(images/face_2.png);}
+			.tab_1 ol.face li:nth-of-type(5){background-image:url(images/face_3.png);}
+			.tab_1 ol.face li:nth-of-type(6){background-image:url(images/face_4.png);}
+
+			/*BG*/
+			.tab_1 ol.bg li:nth-of-type(1){background-image:url(images/bg_0.png);}
+			.tab_1 ol.bg li:nth-of-type(2){background-image:url(images/bg_1.png);}
+			.tab_1 ol.bg li:nth-of-type(3){background-image:url(images/bg_2.png);}
+			.tab_1 ol.bg li:nth-of-type(4){background-image:url(images/bg_3.png);}
+			.tab_1 ol.bg li:nth-of-type(5){background-image:url(images/bg_4.png);}
+			.tab_1 ol.bg li:nth-of-type(6){background-image:url(images/bg_5.png);}
+
+			/*產生結果圖*/
+			.lightbox{ width:100%; height:100vh; position:fixed; left:0; top:0; z-index:500; border:0px solid red; display:none;}/*取消顯示*/
+			.lightbox .overlap{ width:100%; height:100%; position:absolute; background:rgba(255, 255, 255, 0.8); }
+			.lightbox .inner{ width:320px; height:530px;position:absolute; left:50%; top:50%;
+				transform:translate(-50%, -50%); padding: 20px; border-radius: 20px; background:#937357; border:0px solid blue; }
+
+			/*彈窗*/
+			.lightbox .inner a{ display:block; width:100%; height:auto; margin-bottom: 10px; border:0px solid #333;}
+			.lightbox .inner p{ font-size: 14px; text-align: left; line-height: 25px; color: #ffff;}	
+			.lightbox .inner h3{ color:#ffff; margin-bottom: 10px;margin-top: 35px;}	
+			.lightbox .inner h3 i{display: inline-block; position: relative; top:1px;}
+			.lightbox .inner a img{ display:block; width:100%; height:100%;  }
+			.lightbox .btn_close{ position:absolute; top: 12px; right: 15px; margin-bottom: 10px; width: 35px; height: 35px;}	
+			.lightbox .btn_close i{font-size: 22px; display: inline-block; position: relative; top: -4px;}	
+
+			/*產生圖*/
+			.btn_produce{margin: 20px 0px 20px 10px;}
+			.btn_shot{ background:#bd431f;}
+			.btn_random{margin-left: 10px;}
+			.btn_random[disabled]{opacity:.5;}
+			.btn_random img{ width: 20px; height: 20px; vertical-align: sub;/*置中*/ margin-left: 5px; background-size: 100%; }	/*轉圈圈GIF*/
+		
+		</style>
+
+</head>
+
+<body>
+	<!--下載 開始-->
+	<div class="lightbox">
+		<div class="overlap"></div>
+		<!--inner 內容 開始-->
+		<div class="inner">
+			<button class="btn_close"><i class="fa-solid fa-xmark"></i></button>
+			<h3>點擊圖像或右鍵下載專屬招財貓(Ф∀Ф) <i class="fa-solid fa-arrow-down"></i> </h3>
+			<a href="" download="卡片_123456789.png">
+				<img src="images/bg_2.png">
+			</a>
+			<p>❏ 手機請長按卡片 3 秒下載</p>
+			<p>❏ FB 瀏覽器限制下載。<br>請改用 Chrome Safari </p>
+			<p>❏ 下載圖片不可做商業用途_(ΦwΦ;)Ψ </p>
+		</div>
+		<!--inner 內容 結束-->
+	</div>
+	<!--下載 結束-->
+	
+	<!--wrapper 開始-->
+	<div class="wrapper">
+		<!--按鈕 開始-->
+		<div class="btn_produce">
+			<button class="btn_shot">產生圖片</button>
+			<button class="btn_random">隨機產生</button>
+		</div>
+		<!--按鈕 結束-->
+
+		<!--genCard 開始-->
+		<div class="genCard">
+
+			<!--gallery 作圖區 開始-->
+			<div class="gallery">
+				<img class="pic_breed" alt="品種" src="images/breed_0_b.png">
+				<img class="pic_necklace" alt="項鍊" src="images/necklace_0_b.png">
+				<img class="pic_deco" alt="裝飾" src="images/deco_0_b.png">
+				<img class="pic_face" alt="臉" src="images/face_0_b.png">
+				<img class="pic_bg" alt="背景" src="images/bg_0_b.png">
+				<img class="pic_logo" alt="et浮水印" src="images/et_logo.png">
+			</div>
+			<!--gallery 作圖區 結束-->
+
+			<!--tab_1 開始-->
+			<div class="tab_1">
+
+				<!--ul 開始-->
+				<ul>
+					<li title="品種"></li>
+					<li title="項鍊"></li>
+					<li title="配件"></li>
+					<li title="臉"></li>
+					<li title="背景"></li>
+				</ul>
+				<!--ul 結束-->
+
+				<!--品種 開始-->
+				<ol class="breed">
+					<li title="品種0" data-pic-name="breed" data-big="images/breed_0_b.png"></li>
+					<li title="品種1" data-pic-name="breed" data-big="images/breed_1_b.png"></li>
+					<li title="品種2" data-pic-name="breed" data-big="images/breed_2_b.png"></li>
+					<li title="品種3" data-pic-name="breed" data-big="images/breed_3_b.png"></li>
+					<li title="品種4" data-pic-name="breed" data-big="images/breed_4_b.png"></li>
+					<li title="品種5" data-pic-name="breed" data-big="images/breed_5_b.png"></li>
+				</ol>
+				<!--品種 結束-->
+
+				<!--項鍊 開始-->
+				<ol class="necklace">
+					<li title="移除" data-pic-name="necklace" data-big="images/necklace_del_b.png"></li>
+					<li title="項鍊0" data-pic-name="necklace" data-big="images/necklace_0_b.png" class="active"></li>
+					<li title="項鍊1" data-pic-name="necklace" data-big="images/necklace_1_b.png"></li>
+					<li title="項鍊2" data-pic-name="necklace" data-big="images/necklace_2_b.png"></li>
+					<li title="項鍊3" data-pic-name="necklace" data-big="images/necklace_3_b.png"></li>
+					<li title="項鍊4" data-pic-name="necklace" data-big="images/necklace_4_b.png"></li>
+				</ol>
+				<!--項鍊 結束-->
+
+				<!--裝飾 開始-->
+				<ol class="deco">
+					<li title="移除" data-pic-name="deco" data-big="images/deco_del_b.png"></li>
+					<li title="裝飾0" data-pic-name="deco" data-big="images/deco_0_b.png" class="active"></li>
+					<li title="裝飾1" data-pic-name="deco" data-big="images/deco_1_b.png"></li>
+					<li title="裝飾2" data-pic-name="deco" data-big="images/deco_2_b.png"></li>
+					<li title="裝飾3" data-pic-name="deco" data-big="images/deco_3_b.png"></li>
+					<li title="裝飾4" data-pic-name="deco" data-big="images/deco_4_b.png"></li>
+				</ol>
+				<!--裝飾 結束-->
+
+				<!--臉 開始-->
+				<ol class="face">
+					<li title="移除" data-pic-name="face" data-big="images/face_del_b.png"></li>
+					<li title="臉0" data-pic-name="face" data-big="images/face_0_b.png" class="active"></li>
+					<li title="臉1" data-pic-name="face" data-big="images/face_1_b.png"></li>
+					<li title="臉2" data-pic-name="face" data-big="images/face_2_b.png"></li>
+					<li title="臉4" data-pic-name="face" data-big="images/face_3_b.png"></li>
+					<li title="臉5" data-pic-name="face" data-big="images/face_4_b.png"></li>
+				</ol>
+				<!--臉 結束-->
+
+				<!--背景 開始-->
+				<ol class="bg">
+					<li title="背景0" data-pic-name="bg" data-big="images/bg_0_b.png" class="active"></li>
+					<li title="背景1" data-pic-name="bg" data-big="images/bg_1_b.png"></li>
+					<li title="背景2" data-pic-name="bg" data-big="images/bg_2_b.png"></li>
+					<li title="背景3" data-pic-name="bg" data-big="images/bg_3_b.png"></li>
+					<li title="背景4" data-pic-name="bg" data-big="images/bg_4_b.png"></li>
+					<li title="背景5" data-pic-name="bg" data-big="images/bg_5_b.png"></li>
+				</ol>
+				<!--背景 結束-->
+
+			</div>
+			<!--tab_1 結束-->
+
+		</div>
+		<!--genCard 結束-->
+
+	</div>
+	<!--wrapper 結束-->
+		
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="js/html2canvas.js"></script>
+		
+	<script>
+
+		function fnRandom(argMin, argMax){
+			return Math.round(argMin + Math.random()*(argMax - argMin));
+		};
+
+		$(function () {
+			//初始
+			$(".tab_1 ol").hide().eq(0).show();
+			$(".tab_1 ul li").eq(0).addClass("active");
+			$(".tab_1 ol li").eq(0).addClass("active");
+
+			//換物件
+			$(".tab_1 ul li").on("click", function () {
+			
+				let iNo = $(this).index();
+			
+				$(".tab_1 ul li").removeClass("active").eq(iNo).addClass("active");/*第一層當前*/
+				$(".tab_1 ol").hide().eq(iNo).show().addClass("active");
+			
+			});
+		
+			//點縮圖換大圖
+			$(".tab_1 ol li").on("click", function () {
+			
+				//大圖路徑
+				let tmpSrc = $(this).data("big");
+				//大圖class
+				let tmpName = $(this).data("pic-name");
+			
+				$(`.gallery .pic_${tmpName}`).attr("src", tmpSrc);
+			
+				//第二層選取 當前物件
+				let iNo = $(this).index();
+				$(".tab_1 ol li").removeClass("active").eq(iNo).show().addClass("active");
+				$(this).addClass("active");/*當前*/
+			
+			});
+		
+			//截圖
+			async function fnShot() {
+				let tmpCanvas = await html2canvas($(".gallery")[0]);
+				let tmpSrc = tmpCanvas.toDataURL();
+			
+				$(".lightbox").show();
+				$(".lightbox a").attr({
+					href: tmpSrc,
+					download: `卡片_${new Date().getTime()}.png`
+				});
+			
+				$(".lightbox a img").attr("src", tmpSrc);
+			}
+		
+			//截圖
+			$(".btn_shot").on("click", function () {
+				fnShot();
+			});
+		
+			//關
+			$(".lightbox .btn_close, .lightbox a").on("click", function () {
+				$(".lightbox").hide();
+			});
+		
+			//btn_random 亂數
+			$(".btn_random").on("click", function () {
+				$(this).html(`產生中<img src="images/loading.gif">`).prop("disabled", true);
+				//console.log("aaa");
+				let timeOut = 17;
+				let timer = null;
+			
+				(function fnTimeToDo() {
+					if (timeOut > 600) {
+						clearTimeout(timer);
+						$(".btn_random").html("隨機產生").prop("disabled", false);
+						return;
+					}
+				
+					timeOut *= 1.2;
+					fnRandomGen(fnRandom(0, 5), fnRandom(1, 4), fnRandom(1, 4), fnRandom(1, 4), fnRandom(0, 5));
+					timer = setTimeout(fnTimeToDo, timeOut);
+				
+				})();
+				
+			});
+		
+			//初始執行亂數產生
+			$(".btn_random").trigger("click");
+
+			function fnRandomGen(n0, n1, n2, n3, n4) {
+				$(".gallery img.pic_breed").attr("src", `images/breed_${n0}_b.png`);
+				$(".gallery img.pic_necklace").attr("src", `images/necklace_${n1}_b.png`);
+				$(".gallery img.pic_deco").attr("src", `images/deco_${n2}_b.png`);
+				$(".gallery img.pic_face").attr("src", `images/face_${n3}_b.png`);
+				$(".gallery img.pic_bg").attr("src", `images/bg_${n4}_b.png`);
+			};
+		
+		});
+
+		</script>
+
+</body>
+</html>

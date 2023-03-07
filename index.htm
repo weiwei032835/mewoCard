@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <link rel="shortcut icon" href="#"/>
+	<title>招財貓卡片產生器</title>
+		<style>
+			@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+			*{font-family:'Noto Sans TC','微軟正黑體';}
+			*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+			.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+			hr{margin:20px 0px;}
+			pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+			pre strong{color:#CC0000;}
+			pre em{font-style:normal; font-weight:bold; color:#006600;}
+			button{border:none; font-size: 16px; padding: 10px; cursor: pointer; background-color:#dd802c; color: #ffff; border-radius: 10px;}
+
+			ul, ol{ list-style:none;}
+
+			body{background: url(images/bg.jpg);}/*背景*/
+			.wrapper{ width: 100%; height: 100vh; margin: 0 auto;}
+
+			/*main deco裝飾*/
+			.main .deco_1{width: 100%; max-width: 500px; height: 500px; background: url(images/start_deco1.png) no-repeat; 
+			background-size: 100% auto; position: absolute; right: 0px; }
+			.main .deco_2{width: 70%; max-width: 300px; height: 300px; background: url(images/start_deco2.png) no-repeat;
+			background-size: 100% auto; position: absolute; left: 40px; border: 0px solid blue; }
+			.main .deco_3{width: 100%; max-width: 200px; height: 200px; background: url(images/start_deco3.png) no-repeat; 
+			background-size: 100% auto ; position: absolute; right: 100px; bottom:40px; border: 0px solid burlywood;}
+			.main .deco_4{width: 100%;max-width: 100px; height: 100px; background: url(images/start_deco4.png) no-repeat;
+			background-size: 100% auto; position: absolute; left: 200px; bottom:100px; border: 0px solid red;}
+			
+			/*r1*/
+			.r1{ height: 65vh; position: relative; z-index: 10; border: 0px solid blueviolet;}
+
+			/*r1 title*/
+			.r1 .title{ width: 300px; height: 160px; background: url(images/start_title.png) no-repeat; background-size: 100% auto;
+			position:absolute; left:49%; top: 40%; transform:translate(-40%, -100%);}
+			.r1 .pic{ width: 300px; height:300px; background: url(images/start_1.png) no-repeat; background-size: 100% auto;
+			position:absolute; left:50%; top: 48%; transform:translate(-55%, 0%);}
+
+			/*r2 start*/
+			.r2 .start{ position:absolute; left:50%; top:70%; transform:translate(-44%,70%); border: 0px solid blue; }
+			.r2 .start a.btn_go{ width: 150px; height:80px; display: block; background: url(images/btn_go.png) no-repeat; background-size: 100% auto; 
+			text-indent:100%; white-space:nowrap;/*文本不換行*/ overflow:hidden;/*隱藏溢出*/ border: 0px solid #000;}
+			
+			/*1000px*/
+			@media only screen and (max-width:1000px){
+				.main .deco_2{ display: none;}
+				.main .deco_3{ display: none;}
+				.main .deco_4{left: 40px;}
+			}
+
+			/*768px*/
+			@media only screen and (max-width:768px){
+				.main .deco_4{ bottom: 40px;}
+				.r1 .title{ width: 300px; left:47%; top:40%; }
+				.r1 .pic{width:280px;}
+			}
+
+			/*500px*/
+			@media only screen and (max-width:500px){
+				.main .deco_4{ width: 60px; height: 65px;}
+				.r1 .title{ width: 260px; top:44%; }
+				.r1 .pic{ transform: translate(-54%, 0%);}
+				.r2 .start{ top:75%;}
+				.r2 .start a.btn_go{ width: 130px;}
+			}
+		</style>
+
+</head>
+
+<body>
+	
+    <!--wrapper 開始-->
+		<div class="wrapper">
+
+			<!--main 開始-->
+			<div class="main">
+				<!--deco 開始-->
+				<div class="deco_1"></div>
+				<div class="deco_2"></div>
+				<div class="deco_3"></div>
+				<div class="deco_4"></div>
+				<!--deco 結束-->
+	
+				<!--r1 開始-->
+				<div class="r1">
+					<div class="title"></div>
+					<div class="pic"></div>
+				</div>
+				<!--r1 結束-->
+		
+				<!--r2 開始-->
+				<div class="r2">
+					<!--start 開始-->
+					<div class="start">
+						<a class="btn_go" href="make.htm?openExternalBrowser=1">開始製作</a>
+					</div>
+					<!--start 結束-->
+				</div>
+				<!--r2 結束-->
+		
+			</div>
+			<!--main 結束-->
+		
+		</div>
+		<!--wrapper 結束-->
+		
+		
+		
+		
+</body>
+</html>
