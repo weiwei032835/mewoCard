@@ -258,6 +258,27 @@
 		function fnRandom(argMin, argMax){
 			return Math.round(argMin + Math.random()*(argMax - argMin));
 		};
+		//片段 fnBase64ToBlob(b64Data, contentType, sliceSize) (base64字串, 檔案類型, 片段大小)
+		//有data:image/png;base64,的話切檔頭 myBase64.split(',')[1]
+		function fnBase64ToBlob(b64Data, contentType, sliceSize) {
+			contentType = contentType || '';
+			sliceSize = sliceSize || 512;
+			var byteCharacters = atob(b64Data);
+			var byteArrays = [];
+			for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				var slice = byteCharacters.slice(offset, offset + sliceSize);
+				var byteNumbers = new Array(slice.length);
+				for (var i = 0; i < slice.length; i++) {
+					byteNumbers[i] = slice.charCodeAt(i);
+				}
+				var byteArray = new Uint8Array(byteNumbers);
+				byteArrays.push(byteArray);
+			}
+			var blob = new Blob(byteArrays, { type: contentType });
+			return blob;
+		}
+
+		
 
 		$(function () {
 			//初始
@@ -295,9 +316,12 @@
 			//截圖
 			async function fnShot() {
 				let tmpCanvas = await html2canvas($(".gallery")[0]);
-				let tmpSrc = tmpCanvas.toDataURL();
-			
+				let tmpUrl = tmpCanvas.toDataURL();
+				let tmpBlob = fnBase64ToBlob(tmpUrl.split(',')[1], "image/png"); //轉blob
+				let tmpSrc = URL.createObjectURL(tmpBlob); //建立blob連結
+
 				$(".lightbox").show();
+
 				$(".lightbox a").attr({
 					href: tmpSrc,
 					download: `卡片_${new Date().getTime()}.png`
