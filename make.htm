@@ -20,10 +20,10 @@
 
 			ul, ol{ list-style:none; }
 			body{background-color: #FFFBE9;}/*背景色*/
-			.wrapper{ border:0px solid #333; }
+			.wrapper{padding: 10px; border:0px solid #333; }
 
 			/*應用程式*/
-			.genCard{ width:100%; max-width:600px; margin:0 auto; border:0px solid red; }
+			.genCard{ width:100%; max-width:600px; margin:0 auto; }
 			
 			/*gallery 作圖區=======================*/
 			.gallery{ margin: 0 auto; max-width: 500px; width:100%; position:relative; margin-bottom: 20px; border:0px solid olive; }
@@ -121,7 +121,7 @@
 			.lightbox .btn_close i{font-size: 22px; display: inline-block; position: relative; top: -4px;}	
 
 			/*產生圖*/
-			.btn_produce{margin: 20px 0px 20px 10px;}
+			.btn_produce{margin: 20px 0px 20px 0px;}
 			.btn_shot{ background:#bd431f;}
 			.btn_random{margin-left: 10px;}
 			.btn_random[disabled]{opacity:.5;}
@@ -152,16 +152,11 @@
 	
 	<!--wrapper 開始-->
 	<div class="wrapper">
-		<!--按鈕 開始-->
-		<div class="btn_produce">
-			<button class="btn_shot">產生圖片</button>
-			<button class="btn_random">隨機產生</button>
-		</div>
-		<!--按鈕 結束-->
-
+		
 		<!--genCard 開始-->
 		<div class="genCard">
 
+	
 			<!--gallery 作圖區 開始-->
 			<div class="gallery">
 				<img class="pic_breed" alt="品種" src="images/breed_0_b.png">
@@ -172,6 +167,13 @@
 				<img class="pic_logo" alt="et浮水印" src="images/et_logo.png">
 			</div>
 			<!--gallery 作圖區 結束-->
+
+			<!--按鈕 開始-->
+			<div class="btn_produce">
+				<button class="btn_shot">產生圖片</button>
+				<button class="btn_random">隨機產生</button>
+			</div>
+			<!--按鈕 結束-->
 
 			<!--tab_1 開始-->
 			<div class="tab_1">
@@ -254,10 +256,29 @@
 	<script src="js/html2canvas.js"></script>
 		
 	<script>
-
 		function fnRandom(argMin, argMax){
 			return Math.round(argMin + Math.random()*(argMax - argMin));
 		};
+
+		//片段 fnBase64ToBlob(b64Data, contentType, sliceSize) (base64字串, 檔案類型, 片段大小)
+		//有data:image/png;base64,的話切檔頭 myBase64.split(',')[1]
+		function fnBase64ToBlob(b64Data, contentType, sliceSize) {
+			contentType = contentType || '';
+			sliceSize = sliceSize || 512;
+			var byteCharacters = atob(b64Data);
+			var byteArrays = [];
+			for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				var slice = byteCharacters.slice(offset, offset + sliceSize);
+				var byteNumbers = new Array(slice.length);
+				for (var i = 0; i < slice.length; i++) {
+					byteNumbers[i] = slice.charCodeAt(i);
+				}
+				var byteArray = new Uint8Array(byteNumbers);
+				byteArrays.push(byteArray);
+			}
+			var blob = new Blob(byteArrays, { type: contentType });
+			return blob;
+		}
 
 		$(function () {
 			//初始
@@ -267,17 +288,13 @@
 
 			//換物件
 			$(".tab_1 ul li").on("click", function () {
-			
 				let iNo = $(this).index();
-			
 				$(".tab_1 ul li").removeClass("active").eq(iNo).addClass("active");/*第一層當前*/
 				$(".tab_1 ol").hide().eq(iNo).show().addClass("active");
-			
 			});
 		
 			//點縮圖換大圖
 			$(".tab_1 ol li").on("click", function () {
-			
 				//大圖路徑
 				let tmpSrc = $(this).data("big");
 				//大圖class
@@ -289,15 +306,17 @@
 				let iNo = $(this).index();
 				$(".tab_1 ol li").removeClass("active").eq(iNo).show().addClass("active");
 				$(this).addClass("active");/*當前*/
-			
 			});
-		
+
 			//截圖
 			async function fnShot() {
 				let tmpCanvas = await html2canvas($(".gallery")[0]);
-				let tmpSrc = tmpCanvas.toDataURL();
-			
+				let tmpUrl = tmpCanvas.toDataURL();
+				let tmpBlob = fnBase64ToBlob(tmpUrl.split(',')[1], "image/png"); //轉blob
+				let tmpSrc = URL.createObjectURL(tmpBlob); //建立blob連結
+
 				$(".lightbox").show();
+
 				$(".lightbox a").attr({
 					href: tmpSrc,
 					download: `卡片_${new Date().getTime()}.png`
@@ -306,20 +325,54 @@
 				$(".lightbox a img").attr("src", tmpSrc);
 			}
 		
+			//ga卡片資訊
+			function fnShotGaMsg(){
+				
+				//html切成陣列
+				const tmpArr= $(".gallery").html().replace(/\n|\t/g, '').split('><');
+				
+				//截字串
+				let arrKey = tmpArr.map(item => item.split('alt="')[1].split('" src="images/')[0]);
+				let arrVal = tmpArr.map(item=> item.split('src="images/')[1].split('"')[0]);
+
+				let tmpGaObj = {};
+
+				//對應序
+
+				console.log(tmpArr, tmpGaObj);
+
+			} 
+
+
+			// $ each
+			// attr alt src
+			// 截字串
+			// 空物件
+			// 陣列對應到物件
+
+			// gtag('event', '產生圖片', { 
+			//     '角色': '值',
+			//     '字體': '值',
+			//     '外框': '值',
+			//     '圖紋': '值',
+			//     '底色': '值',
+			//     'send_to': ['GAID1',GAID2'] 
+			// });
+
 			//截圖
 			$(".btn_shot").on("click", function () {
 				fnShot();
+				fnShotGaMsg();
 			});
 		
 			//關
 			$(".lightbox .btn_close, .lightbox a").on("click", function () {
 				$(".lightbox").hide();
 			});
-		
+			
 			//btn_random 亂數
 			$(".btn_random").on("click", function () {
 				$(this).html(`產生中<img src="images/loading.gif">`).prop("disabled", true);
-				//console.log("aaa");
 				let timeOut = 17;
 				let timer = null;
 			
@@ -339,7 +392,7 @@
 			});
 		
 			//初始執行亂數產生
-			$(".btn_random").trigger("click");
+			//$(".btn_random").trigger("click");
 
 			function fnRandomGen(n0, n1, n2, n3, n4) {
 				$(".gallery img.pic_breed").attr("src", `images/breed_${n0}_b.png`);
@@ -350,7 +403,6 @@
 			};
 		
 		});
-
 		</script>
 
 </body>
